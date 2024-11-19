@@ -1,0 +1,116 @@
+#include <iostream>
+#include <regex>
+#include <windows.h>
+#include <fstream>
+#include <vector>
+
+//Потоки ввода и вывода Задания 1:
+std::ofstream writing("out.txt");
+std::ifstream reading("in.txt");
+
+//Потоки ввода и вывода Задания 2:
+std::ofstream writing2("out2.txt");
+std::ifstream reading2("in2.txt");
+
+//Класс адреса:
+class address {
+public:
+
+	std::string city;
+	std::string street;
+	int block;
+	int flat;
+};
+
+//функция чтения класса из файла:
+void readClass(address& a, std::ifstream& reading) {
+	reading >> a.city >> a.street >> a.block >> a.flat;
+}
+
+//функция записи класса адреса в файл:
+void writeClass(address& a, std::ofstream& writing) {
+	writing << a.city << ", " << a.street << ", " << a.block << ", " << a.flat << '\n';
+}
+
+//функция сортировки классов в векторе:
+void sortClass(std::vector <address>& a) {
+	address temp;
+	int min = 0;
+	for (int i = 0; i < a.size() - 1; i++) {
+		min = i;
+		for (int k = i+1; k < a.size(); k++) {
+			if (a.at(k).city < a.at(min).city) {
+				min = k;
+			}
+		}
+		temp = a.at(min);
+		a.at(min) = a.at(i);
+		a.at(i) = temp;
+	}
+
+}
+
+int main() {
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	std::setlocale(LC_ALL, "russian");
+
+	//Задание 1:
+
+	int n{}; //переменная для записи числа адресов
+	int k{ 0 }; //переменная-счетчик для чтения классов
+
+	//Чтение и запись числа классов:
+	reading >> n;
+	writing << n << '\n';
+
+	//Создание вектора классов прочитанной длины:
+	std::vector <address> addresses(n);
+
+	//Чтение классов в вектор:
+	while (!reading.eof()) {
+		readClass(addresses.at(n - 1 - k), reading);
+		++k;
+
+	}
+
+	//Запись элементов вектора в файл:
+	for (int i = 0; i < n; i++) {
+		writeClass(addresses.at(i), writing);
+	}
+
+	std::cout << "Задание 1 выполнено! Смторите результат в файле out.txt\n";
+
+
+
+	// Задание 2:
+
+
+	int n2{}; // переменная для записи числа адресов
+	int k2{}; //переменная-счетчик для чтения классов
+
+	//Чтение и запись числа классов:
+	reading2 >> n2;
+	writing2 << n2 << '\n';
+
+	//Создание вектора классов прочитанной длины:
+	std::vector <address> addresses2(n2);
+
+	//Чтение классов в вектор:
+	while (!reading2.eof()) {
+		readClass(addresses2.at(k2), reading2);
+		++k2;
+	}
+
+	//Сортировка классов векторе в алфавитном порядке:
+	sortClass(addresses2);
+
+	//Запись элементов вектора в файл:
+	for (int i = 0; i < n2; i++) {
+		writeClass(addresses2.at(i), writing2);
+	}
+
+	std::cout << "Задание 2 выполнено! Смторите результат в файле out2.txt\n";
+
+	return 0;
+}
